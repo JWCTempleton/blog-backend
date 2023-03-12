@@ -16,7 +16,6 @@ beforeEach(async () => {
 });
 
 test("blogs are returned as json", async () => {
-  console.log("entered test");
   await api
     .get("/api/blogs")
     .expect(200)
@@ -67,6 +66,32 @@ test("A post without number of likes specified defaults to 0", async () => {
   const blogsAtEnd = await helper.postsInDb();
   const contents = blogsAtEnd.map((n) => n.likes);
   expect(contents).toContain(0);
+});
+
+test("blog without title is not added", async () => {
+  const newBlog = {
+    author: "Jamie Baldwin",
+    url: "www.google.com",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const blogsAtEnd = await helper.postsInDb();
+
+  expect(blogsAtEnd).toHaveLength(helper.initialPosts.length);
+});
+
+test("blog without url is not added", async () => {
+  const newBlog = {
+    title: "Hello",
+    author: "Jamie Baldwin",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const blogsAtEnd = await helper.postsInDb();
+
+  expect(blogsAtEnd).toHaveLength(helper.initialPosts.length);
 });
 
 afterAll(async () => {
