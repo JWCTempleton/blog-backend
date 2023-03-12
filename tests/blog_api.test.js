@@ -106,6 +106,27 @@ test("a specific post can be viewed", async () => {
   expect(resultBlog.body).toEqual(postToView);
 });
 
+test("post can be edited", async () => {
+  const postsAtStart = await helper.postsInDb();
+  const postToEdit = postsAtStart[0];
+
+  const editedPost = {
+    title: "First Blog",
+    author: "JWCTempleton",
+    url: "www.google.com",
+    likes: 100,
+  };
+
+  await api
+    .put(`/api/blogs/${postToEdit.id}`)
+    .send(editedPost)
+    .expect("Content-Type", /application\/json/);
+
+  const postsAtEnd = await helper.postsInDb();
+  const contents = postsAtEnd.map((r) => r.likes);
+  expect(contents).toContain(100);
+});
+
 test("a post can be deleted", async () => {
   const postsAtStart = await helper.postsInDb();
   const blogToDelete = postsAtStart[0];
