@@ -94,6 +94,32 @@ test("blog without url is not added", async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialPosts.length);
 });
 
+test("a specific post can be viewed", async () => {
+  const blogsAtStart = await helper.postsInDb();
+
+  const postToView = blogsAtStart[0];
+
+  const resultBlog = await api
+    .get(`/api/blogs/${postToView.id}`)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+  expect(resultBlog.body).toEqual(postToView);
+});
+
+test("a post can be deleted", async () => {
+  const postsAtStart = await helper.postsInDb();
+  const blogToDelete = postsAtStart[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+  const postsAtEnd = await helper.postsInDb();
+
+  expect(postsAtEnd).toHaveLength(helper.initialPosts.length - 1);
+
+  const contents = postsAtEnd.map((r) => r.title);
+
+  expect(contents).not.toContain(blogToDelete.title);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
