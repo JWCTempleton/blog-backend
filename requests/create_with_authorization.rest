@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3QiLCJpZCI6IjY0MGZjNzAyOGRmNDE4NzM2YjU5MDZjNiIsImlhdCI6MTY3ODc1NzUzNX0.oh5VZaOxEq8_X7fU07OGtDe-rehX50psLyM8G-4hN4k
+
+{
+    "title":"Authorization login Works",
+    "author": "Jacob",
+    "url":"www.google.com",
+    "likes":10,
+}
